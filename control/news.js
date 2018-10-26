@@ -20,7 +20,22 @@ router.get('/',checkUser,async(req,res,next)=>{
             data
         })
     }catch(e){
-
+        next(e)
     }
 })
+//添加新闻
+router.post('/',checkUser,async(req,res,next)=>{
+    try {
+        let {header,title, content, contentText, category, author} = req.body
+        let data=await newsModel.create({header,title, content, contentText, category, author})
+        res.json({
+            code: 200,
+            msg: '添加成功',
+            data
+        })
+    }catch(e){
+        next(e)
+    }
+})
+
 module.exports=router

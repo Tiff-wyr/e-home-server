@@ -9,11 +9,11 @@ router.get('/', (req, res, next) => {
         code: 200
     })
 })
-// router.use('/uploadToken', require('./upload'))
+router.use('/uploadToken', require('./upload'))
 router.use('/news', require('./news'))
 router.use('/user', require('./user'))
-// router.use('/category', require('./category'))
-// router.use('/topic', require('./topic'))
-// router.use('/common', require('./common'))
+router.use('/category', require('./category'))
+router.use('/topic', require('./topic'))
+router.use('/common', require('./common'))
 
 module.exports = router
