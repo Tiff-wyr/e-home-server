@@ -1,14 +1,15 @@
 const express=require('express')
 const router=express.Router()
-const userModel=require('../model/user')
+const userModel = require('../model/user')
 const jwt=require('jsonwebtoken')
 const tokenConfig = require('../config/tokenConfig')
 const checkUser = require('../config/checkUser')
 
 //登录
-router.post('/login',(req,res,next)=>{
-    let {idCard,password}=req.body
+router.post('/login',(req, res)=>{
+    let {idCard,password} = req.body
     userModel.findOne({idCard}).then(data=>{
+        console.log(data);
         if(data){
             if(password === data.password){
                 console.log(data);
@@ -72,3 +73,47 @@ router.post('/register',checkUser,async(req,res)=>{
     }
 })
 //获取个人信息
+router.get('/userInfo',checkUser,async(req,res)=>{
+   let idCard= req.user.idCard
+    let data=await userModel.findOne({idCard:idCard},{password:0})
+    if(data){
+       res.json({
+           code: 200,
+           data
+       })
+    }
+})
+//修改密码
+router.post('/reset',checkUser,async(req,res)=>{
+    let {password,newpassword}=req.body
+
+    let user = await userModel.findOne({_id: req.user.id})
+    if(password === user.password){
+        userModel.updateOne({_id:user._id},{password:newpassword}).then(data=>{
+            res.json({
+                code: 200,
+                msg: '修改成功',
+            })
+        })
+    }else{
+        res.json({
+            code: 400,
+            msg: '原密码错误'
+        })
+    }
+})
+//修改个人信息
+router.post('/amend',checkUser,async(req,res)=>{
+    userModel.updateOne({_id:req.user.id},req.body).then(data=>{
+        res.json({
+            code: 200,
+            msg: '修改成功'
+        })
+    })
+})
+//获取所有管理员
+router.get('/',checkUser,async(req,res,next)=>{
+    let {page,size}=req.query
+
+})
+module.exports = router

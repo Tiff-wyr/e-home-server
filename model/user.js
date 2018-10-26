@@ -12,7 +12,6 @@ const user=new Schema({
     //用户名
     username:{
         type:String,
-        require:true
     },
     idCard:{
         type: String,
